@@ -1,6 +1,10 @@
 ## Apollo 🧙 Enhanced InMemoryCache
 
-#### Install
+  Apollo InMemoryCache 🧙wrapper for storing selected only queries and for updating linked/nested without IDs
+
+
+
+### Install
 
 `$ npm install apollo-enhanced-cache-inmemory -S`
 
@@ -8,7 +12,7 @@ or
 
 `$ yarn add apollo-enhanced-cache-inmemory`
 
-#### USAGE
+### USAGE
 
 ##### Creating Enhanced InMemoryCache Config:
 
