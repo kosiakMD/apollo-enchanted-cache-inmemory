@@ -1,4 +1,4 @@
-#### Install
+## Install
 
 `$ npm install apollo-enhanced-cache-inmemory -S`
 
@@ -6,9 +6,9 @@ or
 
 `$ yarn add apollo-enhanced-cache-inmemory`
 
-#### USAGE
+## Usage
 
-##### Creating Enhanced InMemoryCache Config:
+#### Creating Enhanced InMemoryCache Config:
 
 ```$xslt
 ...
@@ -76,7 +76,7 @@ const subscribedQueries = [
 ];
 ```
 
-##### Initiation:
+#### Initiation:
 
 ```
 ...
@@ -92,7 +92,7 @@ const cache = createEnhancedInMemoryCache(
 ...
 ```
 
-##### Restoring data from storage into cache:
+#### Restoring data from storage into cache:
 
 ```$xslt
 ...
@@ -100,7 +100,7 @@ await cache.restoreAllQueries();
 ...
 ```
 
-##### Then ordinary usage:
+#### Then ordinary usage:
 
 ```$xslt
 ...

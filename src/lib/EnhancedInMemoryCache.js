@@ -135,7 +135,10 @@ const createEnhancedInMemoryCache = (
         }
         resolve(true);
       } catch (e) {
-        if (__DEV__) console.warn(e);
+        if (__DEV__) {
+          console.log('\tVersion Syncing Error:');
+          console.warn(e);
+        }
         reject(e);
       }
     });
@@ -151,11 +154,12 @@ const createEnhancedInMemoryCache = (
       return false;
     });
     const callback = errors => {
-      if (__DEV__ && errors) console.warn(errors);
+      if (__DEV__ && errors) {
+        console.log('\tRestore From Storage Error:');
+        console.warn(errors);
+      }
     };
-    console.log('queryNames', queryNames);
     const queriesData = await GQLStorage.multiGet(queryNames, callback);
-    console.log('queriesData', queriesData);
     return storedQueries.map(({ queryNode, nest }, index) =>
       aCache.writeQuery(
         {
@@ -202,7 +206,7 @@ const createEnhancedInMemoryCache = (
 
     const queryName = getQueryName(query);
     if (logCacheWrite && __DEV__) {
-      console.info('onCacheWrite', queryName, result, 'ignore', ignore);
+      console.info('onCacheWrite', queryName, result, ignore ? 'ignore' : '');
     }
     if (ignore) return;
     // eslint-disable-next-line
@@ -218,7 +222,6 @@ const createEnhancedInMemoryCache = (
       } = handler;
       if (queryName === name) {
         if (storeName) {
-          console.log('storeName', storeName);
           /** storing goes asynchronously to do not influence on UI/UX flow */
           (async () => {
             try {
@@ -227,11 +230,13 @@ const createEnhancedInMemoryCache = (
                 retriever ? retriever(result) : result[retrieveField],
               );
             } catch (error) {
-              if (__DEV__) console.warn(error);
+              if (__DEV__) {
+                console.log('\tStoring Query Error:');
+                console.warn(error);
+              }
             }
           })();
         } else if (updateName) {
-          console.log('updateName', updateName);
           /** N.B! update cache goes synchronously to be up to date everywhere */
           try {
             const prevValue = aCache.readQuery({ query: queryNode });
@@ -243,7 +248,10 @@ const createEnhancedInMemoryCache = (
               data,
             });
           } catch (e) {
-            if (__DEV__) console.warn(e);
+            if (__DEV__) {
+              console.log('\tUpdating Query Error:');
+              console.warn(e);
+            }
           }
         }
       }
@@ -270,7 +278,7 @@ const createEnhancedInMemoryCache = (
   const restoreAllQueries = async () => {
     if (versionSyncing.isPending()) {
       await versionSyncing;
-      await restoreFromStorage(); // redundant until migration implemented
+      await restoreFromStorage(); // redundant when migration implemented
     } else {
       await restoreFromStorage();
     }

@@ -7,14 +7,19 @@
     "test": "test"
   },
   "devDependencies": {
-    "@babel/core": "^7.0.0",
+    "@babel/core": "7.0.0",
     "@babel/runtime": "7.0.0",
     "babel-core": "7.0.0-bridge.0",
-    "babel-eslint": "^9.0.0",
-    "babel-preset-flow": "^6.23.0",
+    "babel-eslint": "9.0.0",
+    "babel-preset-flow": "6.23.0",
     "babel-preset-react-native": "5.0.2",
     "babel-preset-react-native-stage-0": "1.0.1",
-    "prettier": "^1.14.2"
+    "eslint": "5.3.0",
+    "eslint-config-airbnb": "17.1.0",
+    "eslint-config-prettier": "3.0.1",
+    "eslint-plugin-import": "2.14.0",
+    "eslint-plugin-prettier": "2.6.2",
+    "prettier": "1.14.2"
   },
   "repository": {
     "type": "git",
@@ -38,5 +43,6 @@
   "bugs": {
     "url": "https://github.com/kosiakMD/apollo-enhanced-cache-inmemory/issues"
   },
-  "homepage": "https://github.com/kosiakMD/apollo-enhanced-cache-inmemory#readme"
+  "homepage": "https://github.com/kosiakMD/apollo-enhanced-cache-inmemory#readme",
+  "dependencies": {}
 }

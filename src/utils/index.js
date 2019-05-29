@@ -1,4 +1,7 @@
 /**
+ * @typedef {String | Number | Object | Array} Any
+ * */
+/**
  * @typedef {Array<string|number>} ArrayPath
  * */
 /**
@@ -25,14 +28,15 @@ function getPathAsArray(path) {
 /**
  * @callback
  * @param {ArrayPath} arrayPath
- * @param {any} nest
+ * @param {Any} nest
  * @param {Object} obj
  * @return Object
  * */
 export function nestedFromArray(arrayPath, nest, obj = {}) {
   arrayPath.reduce(
     // eslint-disable-next-line
-    (o, s, index) => index + 1 === arrayPath.length ? (o[s] = nest) : (o[s] = {}),
+    (o, s, index) =>
+      index + 1 === arrayPath.length ? (o[s] = nest) : (o[s] = {}),
     obj,
   );
   return obj;
@@ -42,7 +46,7 @@ export function nestedFromArray(arrayPath, nest, obj = {}) {
  * @callback
  * @param {Object} obj
  * @param {ObjectPath} path
- * @param {any?} def
+ * @param {Any?} def
  * @return {string | number | object}
  * */
 export function get(obj, path, def) {
@@ -58,16 +62,16 @@ export function get(obj, path, def) {
 
 /**
  * @callback
- * @param {Object} obj
+ * @param {Object} target
  * @param {ObjectPath} path
- * @param {any} setValue
+ * @param {Any} setValue
  * @return {Object}
  * */
-export function set(obj, path, setValue) {
+export function set(target, path, setValue) {
   const fullPath = getPathAsArray(path);
   const length = fullPath.length - 1;
   let index = -1;
-  let nested = obj;
+  let nested = target;
   let prevNest = null;
 
   // eslint-disable-next-line
@@ -88,5 +92,23 @@ export function set(obj, path, setValue) {
     nestedFromArray(nestPath, setValue, prevNest);
   }
 
-  return obj;
+  return target;
+}
+
+/**
+ * @callback
+ * @param {Object} target
+ * @param {Object} source
+ * @return {Object}
+ * */
+export function deepMerge(target, source) {
+  // Iterate through `source` properties and if an `Object` set property to merge of `target` and `source` properties
+  for (let key of Object.keys(source)) {
+    if (source[key] instanceof Object)
+      Object.assign(source[key], deepMerge(target[key], source[key]));
+  }
+
+  // Join `target` and modified `source`
+  Object.assign(target || {}, source);
+  return target;
 }

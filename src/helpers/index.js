@@ -1,26 +1,32 @@
-import { get, set } from '../utils';
+import { get, set, deepMerge } from '../utils';
 
 /**
  * @callback
- * @param {QueryObject} fromQuery
- * @param {ObjectPath} retrieveFields
- * @param {QueryObject?} updateQuery
- * @param {ObjectPath?} nestFields
- * @param {Boolean?} withMerge - either merge or replace
+ * @param {QueryObject} sourceQuery
+ * @param {ObjectPath} sourcePath
+ * @param {QueryObject?} targetQuery
+ * @param {ObjectPath?} targetPath
+ * @param {Boolean?} withMerge - deep merge or replace; DEFAULT = TRUE!!!
+ * @param {Boolean?} withMergeRootOnly - either root merge or deep merge
  * @return {object}
  * */
 export const updateQueryHandler = (
-  fromQuery,
-  retrieveFields,
-  updateQuery,
-  nestFields,
+  sourceQuery,
+  sourcePath,
+  targetQuery,
+  targetPath,
   withMerge = true,
+  withMergeRootOnly = false,
 ) => {
-  const newData = get(fromQuery, retrieveFields);
+  const newData = get(sourceQuery, sourcePath);
   return set(
-    updateQuery,
-    nestFields,
-    withMerge ? { ...get(updateQuery, nestFields), ...newData } : newData,
+    targetQuery,
+    targetPath,
+    withMerge
+      ? withMergeRootOnly
+        ? { ...get(targetQuery, targetPath), ...newData } // root merge only
+        : deepMerge(get(targetQuery, targetPath), newData) // deep merge
+      : newData, // just replace
   );
 };
 
