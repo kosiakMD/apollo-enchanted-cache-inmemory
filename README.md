@@ -12,7 +12,7 @@ or
 
 `$ yarn add apollo-enhanced-cache-inmemory`
 
-### USAGE
+### Usage
 
 ##### Creating Enhanced InMemoryCache Config:
 
