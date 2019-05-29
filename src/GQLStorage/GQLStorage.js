@@ -1,4 +1,4 @@
-import AppStorage from '../../AppStorage';
+import AppStorage from '../AppStorage';
 import { getQueryName } from '../helpers';
 
 /**
