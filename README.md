@@ -1,4 +1,4 @@
-## Apollo :magic wand: Enhanced InMemoryCache
+## Apollo 🧙 Enhanced InMemoryCache
 
 #### Install
 
