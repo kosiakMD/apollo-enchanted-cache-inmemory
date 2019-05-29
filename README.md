@@ -1,4 +1,6 @@
-## Apollo 🧙 Enhanced InMemoryCache
+## 🚀‍‍ Apollo 🧙 Enhanced InMemoryCache
+
+ 🚀 Apollo 🛠‍ Tool represented as InMemoryCache 🧙 wrapper for 🗄 storing / 🗃 restoring ✅ selected only 🗂️ queries and for updating ⛓ linked / nested without 🆔 IDs
 
 #### Install
 
@@ -29,7 +31,7 @@ export const QUERY_CREATED_BY_GQL_FUNCTION = gql`
 ```
 
 ```$xslt
-import { updateQueryHandler } from 'apollo-enhanced-cache-inmemory';
+import { targetQueryHandler } from 'apollo-enhanced-cache-inmemory';
 import {
     SomeQueryName,
     SomeQueryName2,
@@ -38,7 +40,7 @@ import {
     QUERY_CREATED_BY_GQL_FUNCTION,
 } from './.../queries';
 
-// type Retriever = <T1, T2>(fromQuery: QueryObject<T1>, updateQuery: QueryObject<T2>) => QueryObject<T1, T2>,
+// type Retriever = <T1, T2>(sourceQuery: QueryObject<T1>, targetQuery: QueryObject<T2>) => QueryObject<T1, T2>,
 const subscribedQueries = [
   {
     name: SomeQueryName,
@@ -55,8 +57,8 @@ const subscribedQueries = [
     queryNode: QUERY_CREATED_BY_GQL_FUNCTION,
     updateName: SomeQueryName,
     // type Retriever
-    retriever: (fromQuery, updateQuery) =>
-      updateQueryHandler(fromQuery, ['response', 'result'], updateQuery, [
+    retriever: (sourceQuery, targetQuery) =>
+      targetQueryHandler(sourceQuery, ['response', 'result'], targetQuery, [
         SomeQueryResponseField,
         'result',
       ]),
@@ -66,11 +68,11 @@ const subscribedQueries = [
     queryNode: QUERY_CREATED_BY_GQL_FUNCTION,
     updateName: SomeQueryName,
     // type Retriever
-    retriever: (fromQuery, updateQuery) =>
-      updateQueryHandler(
-        fromQuery,
+    retriever: (sourceQuery, targetQuery) =>
+      targetQueryHandler(
+        sourceQuery,
         [ConsumerCoBuyerQueryResponse, 'result'],
-        updateQuery,
+        targetQuery,
         [SomeQueryResponseField, 'result', 'cobuyer'],
         false, // withMerge = false
       ),
@@ -102,7 +104,7 @@ await cache.restoreAllQueries();
 ...
 ```
 
-#### Then ordinary usage:
+#### Basic usage:
 
 ```$xslt
 ...
