@@ -1,6 +1,6 @@
 {
   "name": "apollo-enhanced-cache-inmemory",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Apollo InMemoryCache wrapper for storing selected only queries and for updating linked/nested without IDs",
   "main": "src/index.js",
   "scripts": {
