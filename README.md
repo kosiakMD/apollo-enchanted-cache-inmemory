@@ -1,3 +1,5 @@
+## Apollo :magic wand: Enhanced InMemoryCache
+
 #### Install
 
 `$ npm install apollo-enhanced-cache-inmemory -S`
