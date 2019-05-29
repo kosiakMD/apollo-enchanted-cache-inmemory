@@ -1,2 +1,11 @@
+# OSX
+.DS_Store
+
 # IDE
 .idea
+.idea/
+
+# node.js
+npm-debug.log
+node_modules/
+yarn-error.log

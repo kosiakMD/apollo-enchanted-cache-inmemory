@@ -6,6 +6,16 @@
   "scripts": {
     "test": "test"
   },
+  "devDependencies": {
+    "@babel/core": "^7.0.0",
+    "@babel/runtime": "7.0.0",
+    "babel-core": "7.0.0-bridge.0",
+    "babel-eslint": "^9.0.0",
+    "babel-preset-flow": "^6.23.0",
+    "babel-preset-react-native": "5.0.2",
+    "babel-preset-react-native-stage-0": "1.0.1",
+    "prettier": "^1.14.2"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kosiakMD/apollo-enhanced-cache-inmemory.git"

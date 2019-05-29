@@ -4,6 +4,20 @@ import { nestedFromArray } from '../utils';
 import EnhancedPromise from '../helpers/EnhancedPromise';
 
 /**
+ * type DocumentNode = {
+ *    +kind: 'Document',
+ *    +loc?: Location,
+ *    +definitions: $ReadOnlyArray<DefinitionNode>,
+ * };
+ * */
+/**
+ * @typedef {{
+ *  kind: 'Document',
+ *  loc?: Location,
+ *  definitions: Array<{}>,
+ * }} Query - DocumentNode
+ * */
+/**
  * @typedef {object} QueryObject
  * */
 /**
