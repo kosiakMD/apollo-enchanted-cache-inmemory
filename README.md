@@ -1,4 +1,6 @@
-## Install
+## Apollo 🧙 Enhanced InMemoryCache
+
+#### Install
 
 `$ npm install apollo-enhanced-cache-inmemory -S`
 
@@ -6,7 +8,7 @@ or
 
 `$ yarn add apollo-enhanced-cache-inmemory`
 
-## Usage
+### Usage
 
 #### Creating Enhanced InMemoryCache Config:
 
