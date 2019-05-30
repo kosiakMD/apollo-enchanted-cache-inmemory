@@ -7,7 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## RoadMap
 
 ### Add
- - ability for 2way updating linked/nested queries
+ - tests
+ - ability for 2-way updating linked/nested queries
  - migration support
 
 ## [Unreleased]
@@ -22,13 +23,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## 1.0.0
 ### Changed
  - 🐛 bug-fixes
- - Improvements in Utils and Helpers, Docs & Dependencies
+ - improvements in Utils, Helpers, Docs & Dependencies
  - added ability for deep merge of queries
 
 ## 1.0.0-alpha - DO NOT USE!
 ### Added
- - dependencies
- - 🐛 bug-fixes
- - improvements of dependencies & Docs
- - stable and ready for usage
  - initiation of all basic files
+ - dependencies
+ - improvements of dependencies & Docs
+ - 🐛 bug-fixes
+ - stable and ready for usage
