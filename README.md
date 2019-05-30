@@ -14,7 +14,7 @@ or
 
 #### Creating Enchanted InMemoryCache Config:
 
-```$js
+```javascript
 ...
 export const SomeQueryName = 'SomeQueryName';
 export const SomeQueryResponseField = 'response';
