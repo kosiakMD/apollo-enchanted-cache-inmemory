@@ -30,7 +30,7 @@ export const QUERY_CREATED_BY_GQL_FUNCTION = gql`
 `;
 ```
 
-```$xslt
+```javascript
 import { targetQueryHandler } from 'apollo-enchanted-cache-inmemory';
 import {
     SomeQueryName,
@@ -82,7 +82,7 @@ const subscribedQueries = [
 
 #### Initiation:
 
-```
+```javascript
 ...
 const inMemoryCache = new InMemoryCache({
     ...
@@ -98,7 +98,7 @@ const cache = createEnchantedInMemoryCache(
 
 #### Restoring data from storage into cache:
 
-```$xslt
+```javascript
 ...
 await cache.restoreAllQueries();
 ...
@@ -106,7 +106,7 @@ await cache.restoreAllQueries();
 
 #### Basic usage:
 
-```$xslt
+```javascript
 ...
 const stateLink = withClientState({
     cache,
