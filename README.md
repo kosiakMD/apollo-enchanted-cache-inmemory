@@ -1,10 +1,9 @@
-## Apollo 🧙 Enhanced InMemoryCache
+## 🚀‍‍ Apollo 🧙 Enhanced InMemoryCache
 
-  Apollo InMemoryCache 🧙wrapper for storing selected only queries and for updating linked/nested without IDs
+ 🚀 Apollo 🛠‍ Tool represented as InMemoryCache 🧙 wrapper for 🗄 storing / 🗃 restoring selected only 🗂️ queries and for updating ⛓ linked / nested without IDs
 
+##### !Disclaimer: can consist 🐛 bugs ;)
 
-
-### Install
 ## Install
 
 `$ npm install apollo-enhanced-cache-inmemory -S`
