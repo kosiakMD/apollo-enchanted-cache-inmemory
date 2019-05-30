@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+## 1.0.1
+### Changed
+ - renamed from `Enhanced` to `Enchanted`, just because I want and npm publish issue ;)
+
 ## 1.0.0
 ### Changed
  - 🐛 bug-fixes

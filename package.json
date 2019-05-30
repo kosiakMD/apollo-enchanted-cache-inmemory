@@ -1,5 +1,5 @@
 {
-  "name": "apollo-enhanced-cache-inmemory",
+  "name": "apollo-encanted-cache-inmemory",
   "version": "1.0.0",
   "description": "Apollo InMemoryCache wrapper for storing selected only queries and for updating linked/nested without IDs",
   "main": "src/index.js",
@@ -23,7 +23,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kosiakMD/apollo-enhanced-cache-inmemory.git"
+    "url": "git+https://github.com/kosiakMD/apollo-enchanted-cache-inmemory.git"
   },
   "keywords": [
     "apollo",
@@ -41,8 +41,8 @@
   "author": "Kosiak MD",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/kosiakMD/apollo-enhanced-cache-inmemory/issues"
+    "url": "https://github.com/kosiakMD/apollo-enchanted-cache-inmemory/issues"
   },
-  "homepage": "https://github.com/kosiakMD/apollo-enhanced-cache-inmemory#readme",
+  "homepage": "https://github.com/kosiakMD/apollo-enchanted-cache-inmemory#readme",
   "dependencies": {}
 }

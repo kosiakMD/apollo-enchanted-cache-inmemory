@@ -1,7 +1,7 @@
 import DefaultGQLStorage from '../GQLStorage';
 import { getQueryName } from '../helpers';
 import { nestedFromArray } from '../utils';
-import EnhancedPromise from '../helpers/EnhancedPromise';
+import EnchantedPromise from '../helpers/EnchantedPromise';
 
 /**
  * type DocumentNode = {
@@ -73,50 +73,50 @@ import EnhancedPromise from '../helpers/EnhancedPromise';
  *  disenchant: Function
  *  restoreAllQueries: Function
  *  writeQuery: Function
- * }} EnhancedInMemoryCache
+ * }} EnchantedInMemoryCache
  * */
 /**
  * @typedef {{
  *   subscribedQueries: SubscribedQueries,
  *   version: string | number | any,
  *   migrations?: Array<any>
- * }} EnhancedInMemoryCacheConfig */
+ * }} EnchantedInMemoryCacheConfig */
 /**
  * GeneratedClientQuery - set store defaults as 1st cache write "ROOT_QUERY"
- * @param {InMemoryCache | EnhancedInMemoryCache} aCache
- * @param {EnhancedInMemoryCacheConfig} enhancedInMemoryCacheConfig
+ * @param {InMemoryCache | EnchantedInMemoryCache} aCache
+ * @param {EnchantedInMemoryCacheConfig} enchantedInMemoryCacheConfig
  * @param {Boolean?} logCacheWrite
  * @param {GQLStorage?} storage - storage DI
- * @return {EnhancedInMemoryCache}
+ * @return {EnchantedInMemoryCache}
  * */
 // TODO better to extend but seems it's redundant for 1 override & 2 new methods
-const createEnhancedInMemoryCache = (
+const createEnchantedInMemoryCache = (
   aCache,
-  enhancedInMemoryCacheConfig,
+  enchantedInMemoryCacheConfig,
   logCacheWrite,
   storage,
 ) => {
   // eslint-disable-next-line
   const GQLStorage = storage ? storage : DefaultGQLStorage; // for JSDoc to be handle by WebStorm IDE only
 
-  if (!enhancedInMemoryCacheConfig) {
-    throw new Error('No EnhancedInMemoryCacheConfig provided');
+  if (!enchantedInMemoryCacheConfig) {
+    throw new Error('No EnchantedInMemoryCacheConfig provided');
   }
 
   const versionQueryName = '&_cacheVersion_$';
-  /** @type EnhancedPromise */
+  /** @type EnchantedPromise */
   let versionSyncing;
 
-  const { subscribedQueries, version } = enhancedInMemoryCacheConfig;
+  const { subscribedQueries, version } = enchantedInMemoryCacheConfig;
   if (version == null) {
-    throw new Error('No version of EnhancedInMemoryCacheConfig provided');
+    throw new Error('No version of EnchantedInMemoryCacheConfig provided');
   } else {
-    versionSyncing = new EnhancedPromise(async (resolve, reject) => {
+    versionSyncing = new EnchantedPromise(async (resolve, reject) => {
       try {
         const storedVersion = await GQLStorage.getQuery(versionQueryName);
         if (__DEV__)
           console.log(
-            'EnhancedInMemoryCache',
+            'EnchantedInMemoryCache',
             '\n\tstored version:',
             storedVersion,
             '\n\tcurrent version:',
@@ -292,4 +292,4 @@ const createEnhancedInMemoryCache = (
   return aCache;
 };
 
-export default createEnhancedInMemoryCache;
+export default createEnchantedInMemoryCache;

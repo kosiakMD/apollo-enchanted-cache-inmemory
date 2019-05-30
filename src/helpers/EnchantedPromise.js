@@ -1,4 +1,4 @@
-class EnhancedPromise extends Promise {
+class EnchantedPromise extends Promise {
   constructor(executor) {
     super((resolve, reject) => executor(resolve, reject));
 
@@ -35,4 +35,4 @@ class EnhancedPromise extends Promise {
   isRejected = () => this.rejected;
 }
 
-export default EnhancedPromise;
+export default EnchantedPromise;
