@@ -1,6 +1,6 @@
 ## 🚀‍‍ Apollo 🧙 Enhanced InMemoryCache
 
- 🚀 Apollo 🛠‍ Tool represented as InMemoryCache 🧙 wrapper for 🗄 storing / 🗃 restoring ✅ selected only 🗂️ queries and for updating ⛓ linked / nested without IDs
+ 🚀 Apollo 🛠‍ Tool represented as InMemoryCache 🧙 wrapper for 🗄 storing / 🗃 restoring ✅ selected only 🗂️ queries and for updating ⛓ linked / nested without 🆔 IDs
 
 ##### !Disclaimer: can consist 🐛 bugs ;)
 
