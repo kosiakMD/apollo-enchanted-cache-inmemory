@@ -106,7 +106,7 @@ await cache.restoreAllQueries();
 ...
 ```
 
-#### Then ordinary usage:
+#### Basic usage:
 
 ```$xslt
 ...
