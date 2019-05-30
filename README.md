@@ -1,18 +1,18 @@
-## 🚀‍‍ Apollo 🧙 Enhanced InMemoryCache
+## 🚀‍‍ Apollo 🧙 Enchanted InMemoryCache
 
  🚀 Apollo 🛠‍ Tool represented as InMemoryCache 🧙 wrapper for 🗄 storing / 🗃 restoring ✅ selected only 🗂️ queries and for updating ⛓ linked / nested without 🆔 IDs
 
 #### Install
 
-`$ npm install apollo-enhanced-cache-inmemory -S`
+`$ npm install apollo-enchanted-cache-inmemory -S`
 
 or
 
-`$ yarn add apollo-enhanced-cache-inmemory`
+`$ yarn add apollo-enchanted-cache-inmemory`
 
 ### Usage
 
-#### Creating Enhanced InMemoryCache Config:
+#### Creating Enchanted InMemoryCache Config:
 
 ```$xslt
 ...
@@ -31,7 +31,7 @@ export const QUERY_CREATED_BY_GQL_FUNCTION = gql`
 ```
 
 ```$xslt
-import { targetQueryHandler } from 'apollo-enhanced-cache-inmemory';
+import { targetQueryHandler } from 'apollo-enchanted-cache-inmemory';
 import {
     SomeQueryName,
     SomeQueryName2,
@@ -88,7 +88,7 @@ const inMemoryCache = new InMemoryCache({
     ...
 });
 ...
-const cache = createEnhancedInMemoryCache(
+const cache = createEnchantedInMemoryCache(
     inMemoryCache,
     subscribedQueries,
     logCacheWrite,

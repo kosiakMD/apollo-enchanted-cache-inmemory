@@ -1,5 +1,7 @@
-export createEnhancedInMemoryCache from './lib/EnhancedInMemoryCache';
 export GQLStorage from './GQLStorage';
-export EnhancedPromise from './helpers/EnhancedPromise';
+export EnchantedPromise from './helpers/EnchantedPromise';
 export * from './helpers';
 export * from './utils';
+import EnchantedInMemoryCache from './lib/EnchantedInMemoryCache';
+export const enchantInMemoryCache = EnchantedInMemoryCache;
+export const createEnchantedInMemoryCache = EnchantedInMemoryCache;
