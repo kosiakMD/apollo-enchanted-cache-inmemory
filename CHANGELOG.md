@@ -16,6 +16,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+## 1.0.3
+### Changed
+ - helpers: set() is stable for empty array path
+ - updateQueryHandler changed arguments structure
+ - Improved Readme.md
+
 ## 1.0.2
 ### Changed
  - 1.0.1 skipped because of npm publish issue
