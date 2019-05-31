@@ -74,22 +74,26 @@ export function set(target, path, setValue) {
   let nested = target;
   let prevNest = null;
 
-  // eslint-disable-next-line
-  while (nested != null && index++ < length) {
-    prevNest = nested;
-    const key = fullPath[index];
-    if (typeof nested[key] === 'object') {
-      nested = nested[key];
-    } else {
-      nested = undefined;
+  if (fullPath.length) {
+    // eslint-disable-next-line
+    while (nested != null && index++ < length) {
+      prevNest = nested;
+      const key = fullPath[index];
+      if (typeof nested[key] === 'object') {
+        nested = nested[key];
+      } else {
+        nested = undefined;
+      }
     }
-  }
 
-  if (index > length) {
-    prevNest[fullPath[index - 1]] = setValue;
+    if (index > length) {
+      prevNest[fullPath[index - 1]] = setValue;
+    } else {
+      const nestPath = fullPath.slice(index);
+      nestedFromArray(nestPath, setValue, prevNest);
+    }
   } else {
-    const nestPath = fullPath.slice(index);
-    nestedFromArray(nestPath, setValue, prevNest);
+    target = setValue;
   }
 
   return target;

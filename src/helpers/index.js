@@ -1,34 +1,54 @@
 import { get, set, deepMerge } from '../utils';
 
+/** @enum string */
+export const UpdateTypesEnum = {
+  replace: 'replace',
+  rootMerge: 'rootMerge',
+  deepMerge: 'deepMerge',
+};
 /**
- * @callback
- * @param {QueryObject} sourceQuery
- * @param {ObjectPath} sourcePath
- * @param {QueryObject?} targetQuery
- * @param {ObjectPath?} targetPath
- * @param {Boolean?} withMerge - deep merge or replace; DEFAULT = TRUE!!!
- * @param {Boolean?} withMergeRootOnly - either root merge or deep merge
+ * @typedef {{
+ *  sourceQuery: QueryObject
+ *  sourcePath?: ObjectPath
+ *  targetQuery: QueryObject
+ *  targetPath: ObjectPath
+ *  updateType?: UpdateTypesEnum
+ *  withMerge?: Boolean
+ *  withMergeRootOnly?: Boolean
+ * }} UpdateInput
+ * withMerge - deep merge or replace; DEFAULT = FALSE
+ * withMergeRootOnly - either root merge with replacing nested
+ */
+/**
+ * @callback updateQueryHandler
+ * @param {UpdateInput} updateInput
  * @return {object}
  * */
-export const updateQueryHandler = (
-  sourceQuery,
-  sourcePath,
-  targetQuery,
-  targetPath,
-  withMerge = true,
-  withMergeRootOnly = false,
-) => {
-  const newData = get(sourceQuery, sourcePath);
-  return set(
+export const updateQueryHandler = updateInput => {
+  const {
+    sourceQuery,
     targetQuery,
-    targetPath,
-    withMerge
-      ? withMergeRootOnly
-        ? { ...get(targetQuery, targetPath), ...newData } // root merge only
-        : deepMerge(get(targetQuery, targetPath), newData) // deep merge
-      : newData, // just replace
-  );
+    sourcePath = [],
+    targetPath = [],
+    withMerge = false,
+    withMergeRootOnly = false,
+    updateType,
+  } = updateInput;
+  const newData = get(sourceQuery, sourcePath);
+  let setData = null;
+  if (updateType === UpdateTypesEnum.replace) {
+    // just replace
+    setData = newData;
+  } else if (withMergeRootOnly || updateType === UpdateTypesEnum.rootMerge) {
+    // root merge only
+    setData = { ...get(targetQuery, targetPath), ...newData };
+  } else if (withMerge || updateType === UpdateTypesEnum.deepMerge) {
+    // deep merge
+    setData = deepMerge(get(targetQuery, targetPath), newData);
+  }
+  return set(targetQuery, targetPath, setData);
 };
+updateQueryHandler.types = UpdateTypesEnum;
 
 /**
  * @param {string | QueryObject} query

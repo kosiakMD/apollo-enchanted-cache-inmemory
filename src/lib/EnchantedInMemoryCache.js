@@ -188,7 +188,6 @@ const createEnchantedInMemoryCache = (
       },
       ignore,
     );
-    // oldWriteQuery.call(aCache, options, ignore);
   };
 
   /**
