@@ -18,8 +18,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## 1.0.3
 ### Changed
- - helpers: set() is stable for empty array path
- - updateQueryHandler changed arguments structure
+ - utils:
+   - _set()_ is stable for empty array path
+ - helpers:
+   - _updateQueryHandler()_ changed arguments structure - **BRAKING CHANGES!**
  - Improved Readme.md
 
 ## 1.0.2
