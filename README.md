@@ -9,7 +9,7 @@
    - [Basic usage](#basic-usage)
  - [API](#api)
    - [SubscribedQuery](#subscribedquery)
-   - [updateQueryHelper: Updater](#updatequeryhelper-retriever)
+   - [updateQueryHelper: Updater](#updatequeryhelper-updater)
  - [Types](#types)
  - [License](#license)
 
