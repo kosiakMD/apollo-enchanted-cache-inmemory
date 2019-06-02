@@ -2,6 +2,17 @@
 
 🚀 Apollo 🛠‍ Tool represented as InMemoryCache 🧙 wrapper for 🗄 storing / 🗃 restoring ✅ selected only 🗂️ queries and for updating ⛓ linked / nested without 🆔 IDs
 
+## Content
+ - [Install](#install)
+ - [Usage](#usage)
+   - [Creating Enchanted InMemoryCache Config](#creating-enchanted-inmemorycache-config)
+   - [Basic usage](#basic-usage)
+ - [API](#api)
+   - [SubscribedQuery](#subscribedquery)
+   - [updateQueryHelper: Updater](#updatequeryhelper-retriever)
+ - [Types](#types)
+ - [License](#license)
+
 ## Install
 
 `$ npm install apollo-enchanted-cache-inmemory -S`
@@ -12,7 +23,7 @@ or
 
 ## Usage
 
-### Creating Enchanted InMemoryCache Config:
+### Creating Enchanted InMemoryCache Config
 
 ##### queries
 
@@ -208,7 +219,7 @@ Array\<SubscribedQuery>
 | `retriever`\*\*     | `Retriever`  | _(semi-required)_\* | function returns data for storing/restoring <br/> _\* in case if `storeName` provided _ <br/> _\*\* - either `retriever` or `retrieveField`_ |
 | `updater`           | `Updater`    | _(semi-required)_\* | function returns result with updated data for updating <br/> \_\* - in case if `updateName` provide                                          |
 
-#### updateQueryHelper: Retriever
+#### updateQueryHelper: Updater
 
 | Prop          | Type              | Default      | Note                                                                                                                                                                                                                                                                                                                                                                                                                    |
 | ------------- | ----------------- | ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
