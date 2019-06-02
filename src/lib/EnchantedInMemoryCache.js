@@ -1,6 +1,6 @@
 import DefaultGQLStorage from '../GQLStorage';
 import { getQueryName } from '../helpers';
-import { nestedFromArray } from '../utils';
+import { nestByArrayPath } from '../utils';
 import EnchantedPromise from '../helpers/EnchantedPromise';
 
 /**
@@ -23,6 +23,11 @@ import EnchantedPromise from '../helpers/EnchantedPromise';
 /**
  * @callback Retriever
  * @param {QueryObject} fromQuery
+ * @return {object}
+ * */
+/**
+ * @callback Updater
+ * @param {QueryObject} fromQuery
  * @param  {QueryObject} updateQuery
  * @return {object}
  * */
@@ -38,8 +43,7 @@ import EnchantedPromise from '../helpers/EnchantedPromise';
  *  name: string,
  *  queryNode: Query,
  *  updateName: string
- *  retrieveField?: string
- *  retriever?: Retriever
+ *  updater?: Updater
  * }} LinkedQuery
  * */
 /**
@@ -47,7 +51,7 @@ import EnchantedPromise from '../helpers/EnchantedPromise';
  *  name: string,
  *  queryNode: Query,
  *  storeName: string,
- *  nest?: Array<string>
+ *  nest?: ObjectPath
  *  retrieveField?: string
  *  retriever?: Retriever
  * }} StoredQuery
@@ -58,9 +62,10 @@ import EnchantedPromise from '../helpers/EnchantedPromise';
  *  queryNode: Query,
  *  updateName: string
  *  storeName: string,
- *  nest?: Array<string>
+ *  nest?: ObjectPath
  *  retrieveField?: string
  *  retriever?: Retriever
+ *  updater?: Updater
  * }} SubscribedQuery
  * */
 /**
@@ -164,7 +169,7 @@ const createEnchantedInMemoryCache = (
       aCache.writeQuery(
         {
           query: queryNode,
-          data: nestedFromArray([nest], queriesData[index]),
+          data: nestByArrayPath(nest, queriesData[index]),
         },
         true, // ignore cache update
       ),
@@ -210,6 +215,7 @@ const createEnchantedInMemoryCache = (
     if (ignore) return;
     // eslint-disable-next-line
     for (let i = 0, max = subscribedQueries.length; i < max; i++) {
+      /** @type SubscribedQuery */
       const handler = subscribedQueries[i];
       const {
         name,
@@ -217,6 +223,7 @@ const createEnchantedInMemoryCache = (
         retriever,
         retrieveField,
         updateName,
+        updater,
         queryNode,
       } = handler;
       if (queryName === name) {
@@ -239,8 +246,8 @@ const createEnchantedInMemoryCache = (
           /** N.B! update cache goes synchronously to be up to date everywhere */
           try {
             const prevValue = aCache.readQuery({ query: queryNode });
-            const data = retriever
-              ? retriever(result, prevValue)
+            const data = updater
+              ? updater(result, prevValue)
               : result[retrieveField];
             aCache.writeQuery({
               query: queryNode,

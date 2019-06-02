@@ -8,34 +8,54 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Add
  - tests
- - ability for 2-way updating linked/nested queries
+ - ability for 2-way updating linked/nested queries as optional
  - migration support
+ - support Fragments
+ - support/restoring storing Queries with IDs
 
-## [Unreleased]
-### Added
+## Unreleased
 
+## v1.1.0
 ### Changed
+ **Breaking changes*
+ - _`updateQueryHandler` name changed to **`updateQueryHelper`***_
+ - _`updateQueryHelper` has new param **`updater`** instead of **`retriever`** in case of updating with `updateName` only!* **`retriever`** can be used in case of string with `storeName` as previously_
+ - _`nestedFromArray` renamed to `nestByArrayPath`*_
+ - _README.md_ - huge update with actual usage examples, types, etc
+ - code documentation small updates
 
-## 1.0.3
+### Added
+ - `updateQueryHelper`*
+ - `nestByArrayPath`*
+ - new `updateQueryHelper` param **`updater`** instead of **`retriever`** in case of updating with `updateName` only!*
+
+### Removed
+ - `updateQueryHelper`*
+ - `nestedFromArray`*
+
+### Fixed
+ - utility `set` - could cause a bug with deep (2+) nesting objects into empty object
+
+## v1.0.3
 ### Changed
  - utils:
-   - _set()_ is stable for empty array path
+   - `set()` is stable for empty array path
  - helpers:
-   - _updateQueryHandler()_ changed arguments structure - **BRAKING CHANGES!**
+   - `updateQueryHandler()` changed arguments structure - **Breaking changes!**
  - Improved Readme.md
 
-## 1.0.2
+## v1.0.2
 ### Changed
  - 1.0.1 skipped because of npm publish issue
  - renamed from `Enhanced` to `Enchanted`, just because I want and npm publish issue ;)
 
-## 1.0.0
+## v1.0.0
 ### Changed
  - 🐛 bug-fixes
  - improvements in Utils, Helpers, Docs & Dependencies
  - added ability for deep merge of queries
 
-## 1.0.0-alpha - DO NOT USE!
+## v1.0.0-alpha - DO NOT USE!
 ### Added
  - initiation of all basic files
  - dependencies

@@ -20,11 +20,11 @@ export const UpdateTypesEnum = {
  * withMergeRootOnly - either root merge with replacing nested
  */
 /**
- * @callback updateQueryHandler
+ * @callback updateQueryHelper
  * @param {UpdateInput} updateInput
  * @return {object}
  * */
-export const updateQueryHandler = updateInput => {
+export const updateQueryHelper = updateInput => {
   const {
     sourceQuery,
     targetQuery,
@@ -48,7 +48,7 @@ export const updateQueryHandler = updateInput => {
   }
   return set(targetQuery, targetPath, setData);
 };
-updateQueryHandler.types = UpdateTypesEnum;
+updateQueryHelper.types = UpdateTypesEnum;
 
 /**
  * @param {string | QueryObject} query

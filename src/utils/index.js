@@ -32,7 +32,7 @@ function getPathAsArray(path) {
  * @param {Object} obj
  * @return Object
  * */
-export function nestedFromArray(arrayPath, nest, obj = {}) {
+export function nestByArrayPath(arrayPath, nest, obj = {}) {
   arrayPath.reduce(
     // eslint-disable-next-line
     (o, s, index) =>
@@ -90,7 +90,7 @@ export function set(target, path, setValue) {
       prevNest[fullPath[index - 1]] = setValue;
     } else {
       const nestPath = fullPath.slice(index);
-      nestedFromArray(nestPath, setValue, prevNest);
+      nestByArrayPath(nestPath, setValue, prevNest);
     }
   } else {
     target = setValue;
