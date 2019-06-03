@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 ### Changed
- - _Readme.md_ content link fix
+ - _Readme.md_ content link fix, fixed explanation comments' mistakes
 
 ## v1.1.0
 ### Changed

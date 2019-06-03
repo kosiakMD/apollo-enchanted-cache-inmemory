@@ -117,7 +117,7 @@ const subscribedQueries = [
   // with deep merging all nested objects as updateType='deepMerge';
   // data taken from
   // SomeQueryName2.SomeQueryName2.SomeQueryResponseField2.SomeQueryResultField2
-  // is identical with SomeQueryResponseField.SomeQueryResultField
+  // is identical with SomeQueryName.SomeQueryResponseField.SomeQueryResultField
   // * - example for fields as variables used in a query
   {
     name: SomeQueryName2,
@@ -133,10 +133,10 @@ const subscribedQueries = [
       }),
   },
   // #3
-  // SomeQueryName2 will update SomeQueryName at someDataField by replace
+  // SomeQueryName3 will update SomeQueryName at someDataField by replace
   // as updateType='replace' by default;
   // data taken from SomeQueryName3.response.result
-  // is identical with SomeQueryResponseField.SomeQueryResultField
+  // is identical with SomeQueryName.SomeQueryResponseField.SomeQueryResultField
   // after updating SomeQueryName will be stored as tracked by #1 set
   // ** - example for no variables as fields used in a query
   {
