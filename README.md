@@ -256,7 +256,7 @@ type LinkedQuery = {
   name: string;
   queryNode: DocumentNode; // Apollo Query definition, returned by gql`...`
   updateName: string;
-  updater?: Updater;
+  updater: Updater;
 };
 
 type StoredQuery = {
