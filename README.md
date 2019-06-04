@@ -3,15 +3,16 @@
 🚀 Apollo 🛠‍ Tool represented as InMemoryCache 🧙 wrapper for 🗄 storing / 🗃 restoring ✅ selected only 🗂️ queries and for updating ⛓ linked / nested without 🆔 IDs
 
 ## Content
- - [Install](#install)
- - [Usage](#usage)
-   - [Creating Enchanted InMemoryCache Config](#creating-enchanted-inmemorycache-config)
-   - [Basic usage](#basic-usage)
- - [API](#api)
-   - [SubscribedQuery](#subscribedquery)
-   - [updateQueryHelper: Updater](#updatequeryhelper-updater)
- - [Types](#types)
- - [License](#license)
+
+- [Install](#install)
+- [Usage](#usage)
+  - [Creating Enchanted InMemoryCache Config](#creating-enchanted-inmemorycache-config)
+  - [Basic usage](#basic-usage)
+- [API](#api)
+  - [SubscribedQuery](#subscribedquery)
+  - [updateQueryHelper: Updater](#updatequeryhelper-updater)
+- [Types](#types)
+- [License](#license)
 
 ## Install
 
@@ -171,6 +172,8 @@ const inMemoryCache = new InMemoryCache({
   // ...
 });
 // ...
+const logCacheWrite = true; // for debug/log reasons
+
 const cache = createEnchantedInMemoryCache(
   inMemoryCache,
   subscribedQueries,
@@ -221,13 +224,14 @@ Array\<SubscribedQuery>
 
 #### updateQueryHelper: Updater
 
-| Prop          | Type              | Default      | Note                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| ------------- | ----------------- | ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `sourceQuery` | `QueryObject`     | _(required)_ | Object Data of source Query tracked for updating target Query                                                                                                                                                                                                                                                                                                                                                           |
-| `sourcePath`  | `ObjectPath`      | `[]`         | path to Data source Query object field                                                                                                                                                                                                                                                                                                                                                                                  |
-| `targetQuery` | `QueryObject`     |              | Object Data of target Query should be updated                                                                                                                                                                                                                                                                                                                                                                           |
-| `targetPath`  | `ObjectPath`      | `[]`         | path to Data target Query object field                                                                                                                                                                                                                                                                                                                                                                                  |
-| `updateType`  | `UpdateTypesEnum` | `replace`    | `replace` - just replacing target Data at object some field by source Data <br/> `rootMerge` - merge target Data Object at object field by source Data with replacing tested Data <br/> `deepMerge` - merge target Object Data at all fields (`sourcePath` of `sourceQuery`) by source Object Data with same fields (`targetPath` of `targetQuery`); begins at source Object field and goes recursively into the depths |
+| Prop            | Type              | Default      | Note                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| --------------- | ----------------- | ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `sourceQuery`   | `QueryObject`     | _(required)_ | Object Data of source Query tracked for updating target Query                                                                                                                                                                                                                                                                                                                                                           |
+| `sourcePath`    | `ObjectPath`      | `[]`         | path to Data source Query object field                                                                                                                                                                                                                                                                                                                                                                                  |
+| `targetQuery`   | `QueryObject`     |              | Object Data of target Query should be updated                                                                                                                                                                                                                                                                                                                                                                           |
+| `targetPath`    | `ObjectPath`      | `[]`         | path to Data target Query object field                                                                                                                                                                                                                                                                                                                                                                                  |
+| `updateType`    | `UpdateTypesEnum` | `replace`    | `replace` - just replacing target Data at object some field by source Data <br/> `rootMerge` - merge target Data Object at object field by source Data with replacing tested Data <br/> `deepMerge` - merge target Object Data at all fields (`sourcePath` of `sourceQuery`) by source Object Data with same fields (`targetPath` of `targetQuery`); begins at source Object field and goes recursively into the depths |
+| `sourceDefault` | `any`             | `null`       | data to be used for updating the target Object if no present in the source Object                                                                                                                                                                                                                                                                                                                                       |
 
 ## Types
 
@@ -236,7 +240,7 @@ type ArrayPath = Array<string | number>; // ['a', 'b', 0, 'c', 1]
 
 type ObjectPath = ArrayPath | string; // ['a', 'b', 'c', 0] | 'a.b.c.0'
 
-type QueryObject<Data> = { Object, Data }; // Query result data
+type QueryObject<Data> = { Object; Data }; // Query result data
 
 type Updater = <T1, T2, T3>(
   sourceQuery: QueryObject<T1>,
@@ -253,7 +257,7 @@ type LinkedQuery = {
   queryNode: DocumentNode; // Apollo Query definition, returned by gql`...`
   updateName: string;
   updater?: Updater;
-}
+};
 
 type StoredQuery = {
   name: string;
@@ -262,9 +266,9 @@ type StoredQuery = {
   nest?: ObjectPath;
   retrieveField?: string;
   retriever?: Retriever;
-}
+};
 
-type SubscribedQuery = LinkedQuery | StoredQuery
+type SubscribedQuery = LinkedQuery | StoredQuery;
 
 type SubscribedQueries = Array<SubscribedQuery>;
 

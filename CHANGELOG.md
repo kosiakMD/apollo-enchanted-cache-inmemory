@@ -15,6 +15,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+## v1.1.2
+### Changed
+ - _helpers / updateQueryHelper_ - added _sourceDefault_ option (details in _Readme_)
+ - _utils_ - improved _get_ utility
+ - _Readme_ - added _sourceDefault_ definition
+
 ## v1.1.1
 ### Changed
  - _Readme.md_ content link fix, fixed explanation comments' mistakes

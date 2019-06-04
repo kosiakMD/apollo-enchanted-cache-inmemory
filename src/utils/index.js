@@ -55,8 +55,7 @@ export function get(obj, path, def) {
   return fullPath.every(everyFunc) ? obj : def;
 
   function everyFunc(step) {
-    // eslint-disable-next-line
-    return !(step != null && (obj = obj[step]) === undefined);
+    return !(obj == null || (step != null && (obj = obj[step]) === undefined));
   }
 }
 

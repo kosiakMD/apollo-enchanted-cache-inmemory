@@ -15,6 +15,7 @@ export const UpdateTypesEnum = {
  *  updateType?: UpdateTypesEnum
  *  withMerge?: Boolean
  *  withMergeRootOnly?: Boolean
+ *  sourceDefault?: any
  * }} UpdateInput
  * withMerge - deep merge or replace; DEFAULT = FALSE
  * withMergeRootOnly - either root merge with replacing nested
@@ -33,8 +34,9 @@ export const updateQueryHelper = updateInput => {
     withMerge = false,
     withMergeRootOnly = false,
     updateType = UpdateTypesEnum.replace,
+    sourceDefault = null,
   } = updateInput;
-  const newData = get(sourceQuery, sourcePath);
+  const newData = get(sourceQuery, sourcePath, sourceDefault);
   let setData = null;
   if (updateType === UpdateTypesEnum.replace) {
     // just replace
