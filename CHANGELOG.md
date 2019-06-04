@@ -14,8 +14,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
  - support/restoring storing Queries with IDs
 
 ## Unreleased
+
+## v1.1.1
 ### Changed
  - _Readme.md_ content link fix, fixed explanation comments' mistakes
+ - _helpers_ / _updateQueryHelper_: fixed missed default `updateType`
 
 ## v1.1.0
 ### Changed

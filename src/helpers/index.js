@@ -32,7 +32,7 @@ export const updateQueryHelper = updateInput => {
     targetPath = [],
     withMerge = false,
     withMergeRootOnly = false,
-    updateType,
+    updateType = UpdateTypesEnum.replace,
   } = updateInput;
   const newData = get(sourceQuery, sourcePath);
   let setData = null;
