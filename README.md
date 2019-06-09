@@ -172,12 +172,25 @@ const inMemoryCache = new InMemoryCache({
   // ...
 });
 // ...
-const logCacheWrite = true; // for debug/log reasons
+// for debug/log reasons
+/** @type Logs */
+const logs = {
+  logCacheWrite: true,
+  beforeHandlers: (cacheData, queryName) => {
+    console.log('beforeHandlers', queryName, cacheData.data);
+  },
+  beforeWrite: (cacheData, queryName) => {
+    console.log('beforeWrite', queryName, cacheData.data);
+  },
+  afterWrite: (cacheData, queryName) => {
+    console.log('afterWrite', queryName, cacheData.data);
+  },
+};
 
 const cache = createEnchantedInMemoryCache(
   inMemoryCache,
   subscribedQueries,
-  logCacheWrite,
+  logs,
 );
 // ...
 const stateLink = withClientState({
@@ -271,6 +284,17 @@ type StoredQuery = {
 type SubscribedQuery = LinkedQuery | StoredQuery;
 
 type SubscribedQueries = Array<SubscribedQuery>;
+
+type DepTrackingCache = { data: Object; depend: Object };
+
+type Logger = (cacheData: DepTrackingCache, queryName: String) => void;
+
+type Logs = {
+    logCacheWrite: Boolean,
+    beforeHandlers: Logger,
+    beforeWrite: Logger,
+    afterWrite: Logger,
+};
 
 enum UpdateTypesEnum {
   replace = 'replace',

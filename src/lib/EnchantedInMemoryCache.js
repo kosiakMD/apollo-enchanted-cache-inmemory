@@ -18,7 +18,13 @@ import EnchantedPromise from '../helpers/EnchantedPromise';
  * }} Query - DocumentNode
  * */
 /**
- * @typedef {object} QueryObject
+ * @typedef {Object} QueryObject
+ * */
+/**
+ * @typedef {{
+ *   data: Object,
+ *   depend: Object,
+ * }} DepTrackingCache
  * */
 /**
  * @callback Retriever
@@ -30,6 +36,12 @@ import EnchantedPromise from '../helpers/EnchantedPromise';
  * @param {QueryObject} fromQuery
  * @param  {QueryObject} updateQuery
  * @return {object}
+ * */
+/**
+ * @callback Logger
+ * @param {DepTrackingCache} cacheData
+ * @param {String} queryName
+ * @return void
  * */
 /**
  * @typedef {{
@@ -82,15 +94,23 @@ import EnchantedPromise from '../helpers/EnchantedPromise';
  * */
 /**
  * @typedef {{
+ *   logCacheWrite: Boolean,
+ *   beforeHandlers: Logger,
+ *   beforeWrite: Logger,
+ *   afterWrite: Logger,
+ * }} Logs
+ * */
+/**
+ * @typedef {{
  *   subscribedQueries: SubscribedQueries,
  *   version: string | number | any,
- *   migrations?: Array<any>
+ *   migrations?: Array<any>,
  * }} EnchantedInMemoryCacheConfig */
 /**
  * GeneratedClientQuery - set store defaults as 1st cache write "ROOT_QUERY"
  * @param {InMemoryCache | EnchantedInMemoryCache} aCache
  * @param {EnchantedInMemoryCacheConfig} enchantedInMemoryCacheConfig
- * @param {Boolean?} logCacheWrite
+ * @param {Logs?} logs
  * @param {GQLStorage?} storage - storage DI
  * @return {EnchantedInMemoryCache}
  * */
@@ -98,9 +118,11 @@ import EnchantedPromise from '../helpers/EnchantedPromise';
 const createEnchantedInMemoryCache = (
   aCache,
   enchantedInMemoryCacheConfig,
-  logCacheWrite,
+  logs = {},
   storage,
 ) => {
+  const { logCacheWrite, beforeHandlers, beforeWrite, afterWrite } = logs;
+
   const logError = (title, er, name = '') => {
     if (__DEV__) {
       console.log(`\nError: ${title}`);
@@ -248,7 +270,10 @@ const createEnchantedInMemoryCache = (
     const { query, result } = writeData;
     const queryName = getQueryName(query);
     if (logCacheWrite && __DEV__) {
-      console.info('onCacheWrite', queryName, result, ignore ? 'ignore' : '');
+      console.info('On Cache Write', queryName, result, ignore ? 'ignore' : '');
+      if (beforeHandlers) {
+        beforeHandlers(aCache.data, queryName);
+      }
     }
     if (ignore) {
       // just write into cache without handlers
@@ -266,9 +291,6 @@ const createEnchantedInMemoryCache = (
         updateName,
         updater,
         queryNode,
-        mergeToQuery,
-        sourcePath,
-        targetPath,
       } = handler;
 
       if (queryName === name) {
@@ -282,7 +304,21 @@ const createEnchantedInMemoryCache = (
         }
       }
     }
-    if (allowWrite) oldWrite.call(aCache, writeData);
+    if (allowWrite) {
+      if (logCacheWrite && __DEV__) {
+        if (beforeWrite) {
+          beforeWrite(aCache.data, queryName);
+        }
+      }
+
+      oldWrite.call(aCache, writeData);
+
+      if (logCacheWrite && __DEV__) {
+        if (afterWrite) {
+          afterWrite(aCache.data, queryName);
+        }
+      }
+    }
   };
 
   /**

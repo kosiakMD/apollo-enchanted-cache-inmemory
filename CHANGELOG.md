@@ -8,14 +8,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Add
  - tests
- - ability for 2-way updating linked/nested queries as optional
+ - ability for 2-ways updating linked/nested queries as optional
  - migration support
  - support Fragments
  - support/restoring storing Queries with IDs
 
 ## Unreleased
+
+## v1.1.3
 ### Changed
- - _Readme.md_ - fixed definitions
+ - _Readme.md_ - fixed definitions, improved by new changes
+ - improved logs and some logic of Enchanted InMemory Cache at _EnchantedInMemoryCache.js_
 
 ## v1.1.2
 ### Changed
