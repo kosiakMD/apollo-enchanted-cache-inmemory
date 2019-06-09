@@ -101,6 +101,48 @@ const createEnchantedInMemoryCache = (
   logCacheWrite,
   storage,
 ) => {
+  const logError = (title, er, name = '') => {
+    if (__DEV__) {
+      console.log(`\nError: ${title}`);
+      if (Array.isArray(er)) {
+        console.log('\nqueries', name);
+        er.map(console.warn);
+      } else {
+        name && console.log(`\ntracked by name ${name}`);
+        console.warn(er);
+      }
+    }
+  };
+
+  const asyncVersionSyncing = async (resolve, reject) => {
+    try {
+      const storedVersion = await GQLStorage.getQuery(versionQueryName);
+      if (__DEV__)
+        console.log(
+          'EnchantedInMemoryCache',
+          '\n\tstored version:',
+          storedVersion,
+          '\n\tcurrent version:',
+          version,
+        );
+      if (storedVersion !== version) {
+        // TODO: provide logic of migration
+        const queryNames = [];
+        subscribedQueries.forEach(handler => {
+          if (handler.storeName) {
+            queryNames.push(handler.storeName);
+          }
+        });
+        await GQLStorage.multiRemove(queryNames);
+        await GQLStorage.saveQuery(versionQueryName, version);
+      }
+      resolve(true);
+    } catch (e) {
+      logError('Version Syncing', e);
+      reject(e);
+    }
+  };
+
   // eslint-disable-next-line
   const GQLStorage = storage ? storage : DefaultGQLStorage; // for JSDoc to be handle by WebStorm IDE only
 
@@ -116,37 +158,7 @@ const createEnchantedInMemoryCache = (
   if (version == null) {
     throw new Error('No version of EnchantedInMemoryCacheConfig provided');
   } else {
-    versionSyncing = new EnchantedPromise(async (resolve, reject) => {
-      try {
-        const storedVersion = await GQLStorage.getQuery(versionQueryName);
-        if (__DEV__)
-          console.log(
-            'EnchantedInMemoryCache',
-            '\n\tstored version:',
-            storedVersion,
-            '\n\tcurrent version:',
-            version,
-          );
-        if (storedVersion !== version) {
-          // TODO: provide logic of migration
-          const queryNames = [];
-          subscribedQueries.forEach(handler => {
-            if (handler.storeName) {
-              queryNames.push(handler.storeName);
-            }
-          });
-          await GQLStorage.multiRemove(queryNames);
-          await GQLStorage.saveQuery(versionQueryName, version);
-        }
-        resolve(true);
-      } catch (e) {
-        if (__DEV__) {
-          console.log('\tVersion Syncing Error:');
-          console.warn(e);
-        }
-        reject(e);
-      }
-    });
+    versionSyncing = new EnchantedPromise(asyncVersionSyncing);
   }
 
   const restoreFromStorage = async () => {
@@ -159,10 +171,7 @@ const createEnchantedInMemoryCache = (
       return false;
     });
     const callback = errors => {
-      if (__DEV__ && errors) {
-        console.log('\tRestore From Storage Error:');
-        console.warn(errors);
-      }
+      errors && logError('Restore From Storage', errors, storedQueries);
     };
     const queriesData = await GQLStorage.multiGet(queryNames, callback);
     return storedQueries.map(({ queryNode, nest }, index) =>
@@ -174,6 +183,36 @@ const createEnchantedInMemoryCache = (
         true, // ignore cache update
       ),
     );
+  };
+
+  const storeQuery = async (
+    name,
+    storeName,
+    result,
+    retriever,
+    retrieveField,
+  ) => {
+    try {
+      await GQLStorage.saveQuery(
+        storeName,
+        retriever ? retriever(result) : result[retrieveField],
+      );
+    } catch (e) {
+      logError('Storing Query', e, name);
+    }
+  };
+
+  const updateQuery = (name, queryNode, result, updater, retrieveField) => {
+    try {
+      const prevValue = aCache.readQuery({ query: queryNode });
+      const data = updater ? updater(result, prevValue) : result[retrieveField];
+      aCache.writeQuery({
+        query: queryNode,
+        data,
+      });
+    } catch (e) {
+      logError('Updating Query', e, name);
+    }
   };
 
   const { write: oldWrite, writeQuery: oldWriteQuery } = aCache;
@@ -205,14 +244,16 @@ const createEnchantedInMemoryCache = (
    * @return void
    * */
   const write = (writeData, ignore) => {
-    oldWrite.call(aCache, writeData);
+    let allowWrite = true;
     const { query, result } = writeData;
-
     const queryName = getQueryName(query);
     if (logCacheWrite && __DEV__) {
       console.info('onCacheWrite', queryName, result, ignore ? 'ignore' : '');
     }
-    if (ignore) return;
+    if (ignore) {
+      // just write into cache without handlers
+      return oldWrite.call(aCache, writeData);
+    }
     // eslint-disable-next-line
     for (let i = 0, max = subscribedQueries.length; i < max; i++) {
       /** @type SubscribedQuery */
@@ -225,43 +266,23 @@ const createEnchantedInMemoryCache = (
         updateName,
         updater,
         queryNode,
+        mergeToQuery,
+        sourcePath,
+        targetPath,
       } = handler;
+
       if (queryName === name) {
         if (storeName) {
           /** storing goes asynchronously to do not influence on UI/UX flow */
-          (async () => {
-            try {
-              await GQLStorage.saveQuery(
-                storeName,
-                retriever ? retriever(result) : result[retrieveField],
-              );
-            } catch (error) {
-              if (__DEV__) {
-                console.log('\tStoring Query Error:');
-                console.warn(error);
-              }
-            }
-          })();
-        } else if (updateName) {
+          storeQuery(name, storeName, result, retriever, retrieveField);
+        }
+        if (updateName) {
           /** N.B! update cache goes synchronously to be up to date everywhere */
-          try {
-            const prevValue = aCache.readQuery({ query: queryNode });
-            const data = updater
-              ? updater(result, prevValue)
-              : result[retrieveField];
-            aCache.writeQuery({
-              query: queryNode,
-              data,
-            });
-          } catch (e) {
-            if (__DEV__) {
-              console.log('\tUpdating Query Error:');
-              console.warn(e);
-            }
-          }
+          updateQuery(name, queryNode, result, updater, retrieveField);
         }
       }
     }
+    if (allowWrite) oldWrite.call(aCache, writeData);
   };
 
   /**
