@@ -1,6 +1,6 @@
 import DefaultGQLStorage from '../GQLStorage';
 import { getQueryName } from '../helpers';
-import { nestByArrayPath } from '../utils';
+import { deepMerge, nestByArrayPath, get } from '../utils';
 import EnchantedPromise from '../helpers/EnchantedPromise';
 
 /**
@@ -185,6 +185,29 @@ const createEnchantedInMemoryCache = (
     );
   };
 
+  const mergeQuery = (name, mergeToQuery, result, sourcePath, targetPath) => {
+    try {
+      console.log('mergeToQuery', mergeToQuery, result);
+      const prevValue = aCache.readQuery({ query: mergeToQuery });
+      console.log('mergeToQuery prevValue', prevValue);
+      const newData = get(result, sourcePath, null);
+      console.log('newData', newData);
+      const pathData = get(prevValue, targetPath);
+      console.log('pathData', pathData);
+      const setData = deepMerge(get(prevValue, targetPath), newData);
+      // const nextValue = deepMerge(prevValue, result);
+      console.log('setData', setData);
+      console.log('prevValue', prevValue);
+      aCache.writeQuery({
+        query: mergeToQuery,
+        // data: setData,
+        data: prevValue,
+      });
+    } catch (e) {
+      logError('Merge Query', e, name);
+    }
+  };
+
   const storeQuery = async (
     name,
     storeName,
@@ -227,7 +250,8 @@ const createEnchantedInMemoryCache = (
       {
         dataId: 'ROOT_QUERY',
         result: options.data,
-        query: aCache.transformDocument(options.query),
+        // query: aCache.transformDocument(options.query),
+        query: options.query,
         variables: options.variables,
       },
       ignore,
@@ -272,6 +296,10 @@ const createEnchantedInMemoryCache = (
       } = handler;
 
       if (queryName === name) {
+        if (mergeToQuery) {
+          allowWrite = false;
+          mergeQuery(name, mergeToQuery, result, sourcePath, targetPath);
+        }
         if (storeName) {
           /** storing goes asynchronously to do not influence on UI/UX flow */
           storeQuery(name, storeName, result, retriever, retrieveField);
