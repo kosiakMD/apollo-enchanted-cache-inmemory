@@ -4,7 +4,8 @@
   "description": "Apollo InMemoryCache wrapper for storing selected only queries and for updating linked/nested without IDs",
   "main": "src/index.js",
   "scripts": {
-    "test": "test"
+    "test": "test",
+    "publish": "npm publish --access public"
   },
   "devDependencies": {
     "@babel/core": "7.0.0",
