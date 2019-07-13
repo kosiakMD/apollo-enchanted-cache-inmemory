@@ -111,17 +111,20 @@ import EnchantedPromise from '../helpers/EnchantedPromise';
  * @param {InMemoryCache | EnchantedInMemoryCache} aCache
  * @param {EnchantedInMemoryCacheConfig} enchantedInMemoryCacheConfig
  * @param {Logs?} logs
- * @param {GQLStorage?} storage - storage DI
+ * @param {AsyncStorage || LocalStorage} AppStorage - storage DI
+ * @param {GQLStorage?} GraphQLStorage - storage DI
  * @return {EnchantedInMemoryCache}
  * */
 // TODO better to extend but seems it's redundant for 1 override & 2 new methods
 const createEnchantedInMemoryCache = (
   aCache,
   enchantedInMemoryCacheConfig,
+  AppStorage,
   logs = {},
-  storage,
+  GraphQLStorage,
 ) => {
-  const { logCacheWrite, beforeHandlers, beforeWrite, afterWrite } = logs;
+  /** static begin */
+  const versionQueryName = '&_cacheVersion_$';
 
   const logError = (title, er, name = '') => {
     if (__DEV__) {
@@ -135,6 +138,22 @@ const createEnchantedInMemoryCache = (
       }
     }
   };
+  /** static end */
+
+  /** constructor begin */
+  const GQLStorage = GraphQLStorage || new DefaultGQLStorage(AppStorage);
+
+  if (!enchantedInMemoryCacheConfig) {
+    throw new Error('No EnchantedInMemoryCacheConfig provided');
+  }
+
+  /** @type EnchantedPromise */
+  let versionSyncing;
+
+  const { subscribedQueries, version } = enchantedInMemoryCacheConfig;
+
+  const { logCacheWrite, beforeHandlers, beforeWrite, afterWrite } = logs;
+  /** constructor end */
 
   const asyncVersionSyncing = async (resolve, reject) => {
     try {
@@ -165,18 +184,7 @@ const createEnchantedInMemoryCache = (
     }
   };
 
-  // eslint-disable-next-line
-  const GQLStorage = storage ? storage : DefaultGQLStorage; // for JSDoc to be handle by WebStorm IDE only
-
-  if (!enchantedInMemoryCacheConfig) {
-    throw new Error('No EnchantedInMemoryCacheConfig provided');
-  }
-
-  const versionQueryName = '&_cacheVersion_$';
-  /** @type EnchantedPromise */
-  let versionSyncing;
-
-  const { subscribedQueries, version } = enchantedInMemoryCacheConfig;
+  /** constructor */
   if (version == null) {
     throw new Error('No version of EnchantedInMemoryCacheConfig provided');
   } else {
@@ -326,12 +334,14 @@ const createEnchantedInMemoryCache = (
    * @return void
    * */
   const disenchant = () => {
-    aCache.write = oldWrite; // eslint-disable-line
-    aCache.writeQuery = oldWriteQuery; // eslint-disable-line
-    aCache.disenchant = void 0; // eslint-disable-line
-    delete aCache.disenchant; // eslint-disable-line
-    aCache.restoreAllQueries = void 0; // eslint-disable-line
-    delete aCache.restoreAllQueries; // eslint-disable-line
+    aCache.write = oldWrite;
+    aCache.writeQuery = oldWriteQuery;
+    aCache.disenchant = void 0;
+    delete aCache.disenchant;
+    aCache.restoreAllQueries = void 0;
+    delete aCache.restoreAllQueries;
+    delete aCache.GraphQLStorage;
+    delete aCache.AppStorage;
   };
 
   /**
@@ -347,10 +357,14 @@ const createEnchantedInMemoryCache = (
     }
   };
 
-  aCache.write = write; // eslint-disable-line
-  aCache.writeQuery = writeQuery; // eslint-disable-line
-  aCache.disenchant = disenchant; // eslint-disable-line
-  aCache.restoreAllQueries = restoreAllQueries; // eslint-disable-line
+  /** constructor */
+  /** enchant */
+  aCache.write = write;
+  aCache.writeQuery = writeQuery;
+  aCache.disenchant = disenchant;
+  aCache.restoreAllQueries = restoreAllQueries;
+  aCache.GQLStorage = GQLStorage;
+  aCache.AppStorage = GQLStorage.appStorage;
 
   return aCache;
 };

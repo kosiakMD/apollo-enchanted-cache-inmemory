@@ -1,6 +1,68 @@
-import { AsyncStorage } from 'react-native';
+/**
+ * @typedef {{
+ *   getItem: Function,
+ *   setItem: Function,
+ *   removeItem: Function,
+ *   clear: Function,
+ *   getAllKeys: Function,
+ *   multiGet?: Function,
+ *   multiRemove?: Function,
+ *   mergeItem?: Function,
+ * }} AnyStorage
+ * */
 
 class AppStorage {
+  /** @type AnyStorage || null */
+  storage = null;
+
+  constructor(storage) {
+    if (storage) {
+      this.storage = storage;
+      if (!this.storage.multiGet || !this.storage.multiRemove) {
+        this.enchantLocalStorage(this.storage);
+      }
+    } else {
+      throw new Error('No Storage provided');
+    }
+  }
+
+  enchantLocalStorage(localStorage) {
+    /** add multiGet */
+    localStorage.multiGet = async (keys, callback) => {
+      const errors = [];
+      const results = [];
+      const interCallback = (error, result) => {
+        if (error) errors.push(error);
+        if (result) results.push(result);
+      };
+      try {
+        return await Promise.all(keys.map(key => this.get(key, interCallback)));
+      } catch (e) {
+        throw e;
+      } finally {
+        if (callback) callback(errors, results);
+      }
+    };
+    /** add multiRemove */
+    localStorage.multiRemove = async (keys, callback) => {
+      const errors = [];
+      const results = [];
+      const interCallback = (error, result) => {
+        if (error) errors.push(error);
+        if (result) results.push(result);
+      };
+      try {
+        return await Promise.all(
+          keys.map(key => this.remove(key, interCallback)),
+        );
+      } catch (e) {
+        throw e;
+      } finally {
+        if (callback) callback(errors, results);
+      }
+    };
+  }
+
   /**
    * @callback storageCallback
    *  @param {Error|null} error
@@ -23,8 +85,8 @@ class AppStorage {
    *  @param {getCallback?} callback
    *  @return {Promise}
    * */
-  static async get(key, callback) {
-    return AsyncStorage.getItem(key, callback);
+  async get(key, callback) {
+    return this.storage.getItem(key, callback);
   }
 
   /**
@@ -34,12 +96,12 @@ class AppStorage {
    *  @return void
    */
   /**
-   *  @param {Query | String} key
+   *  @param {Array<Query | String>} keys
    *  @param {multiActionCallback?} callback
    *  @return {Promise}
    * */
-  static async multiGet(key, callback) {
-    return AsyncStorage.multiGet(key, callback);
+  async multiGet(keys, callback) {
+    return this.storage.multiGet(keys, callback);
   }
 
   /**
@@ -47,8 +109,8 @@ class AppStorage {
    *  @param {multiActionCallback?} callback
    *  @return {Promise}
    * */
-  static async multiRemove(key, callback) {
-    return AsyncStorage.multiRemove(key, callback);
+  async multiRemove(key, callback) {
+    return this.storage.multiRemove(key, callback);
   }
 
   /**
@@ -56,8 +118,8 @@ class AppStorage {
    *  @param {String} data
    *  @param {storageCallback?} callback
    * */
-  static async set(key, data, callback) {
-    return AsyncStorage.setItem(key, data, callback);
+  async set(key, data, callback) {
+    return this.storage.setItem(key, data, callback);
   }
 
   /**
@@ -65,8 +127,8 @@ class AppStorage {
    *  @param {String} data
    *  @param {storageCallback?} callback
    * */
-  static async merge(key, data, callback) {
-    return AsyncStorage.mergeItem(key, data, callback);
+  async merge(key, data, callback) {
+    return this.storage.mergeItem(key, data, callback);
   }
 
   /**
@@ -74,24 +136,24 @@ class AppStorage {
    *  @param {storageCallback?} callback
    *  @return {Promise}
    * */
-  static async remove(key, callback) {
-    return AsyncStorage.removeItem(key, callback);
+  async remove(key, callback) {
+    return this.storage.removeItem(key, callback);
   }
 
   /**
    *  @param {storageCallback?} callback
    *  @return {Promise}
    * */
-  static async reset(callback) {
-    return AsyncStorage.clear(callback);
+  async reset(callback) {
+    return this.storage.clear(callback);
   }
 
   /**
    *  @param {keysCallback?} callback
    *  @return {Promise}
    * */
-  static async getKeys(callback) {
-    return AsyncStorage.getAllKeys(callback);
+  async getKeys(callback) {
+    return this.storage.getAllKeys(callback);
   }
 }
 

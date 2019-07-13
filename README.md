@@ -167,7 +167,13 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import ApolloClient from 'apollo-client';
 import { withClientState } from 'apollo-link-state';
 import { ApolloLink } from 'apollo-link';
-// ...
+// if React Native
+// up to RN v0.58
+// import { AsyncStorage } from 'react-native';
+// since RN v0.59
+import AsyncStorage from '@react-native-community/async-storage';
+// if Web just use window.LocalStorage
+
 const inMemoryCache = new InMemoryCache({
   // ...
 });
@@ -190,8 +196,12 @@ const logs = {
 const cache = createEnchantedInMemoryCache(
   inMemoryCache,
   subscribedQueries,
+  AsyncStorage, // or LocalStorage
   logs,
+  // alternative to `GraphQLStorage` class, eg for wrapper Realm
 );
+const GQLStorage = cache.GQLStorage; // to get `GQLStorage`
+const AppStorage = cache.AppStorage; // to get `AppStorage` - AsyncStorage or LocalStorage
 // ...
 const stateLink = withClientState({
   cache,

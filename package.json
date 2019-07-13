@@ -1,6 +1,6 @@
 {
   "name": "apollo-enchanted-cache-inmemory",
-  "version": "1.1.3",
+  "version": "1.2.0-beta.0",
   "description": "Apollo InMemoryCache wrapper for storing selected only queries and for updating linked/nested without IDs",
   "main": "src/index.js",
   "scripts": {
@@ -29,15 +29,16 @@
   "keywords": [
     "apollo",
     "cache",
-    "storage",
-    "restore",
     "store",
+    "save",
+    "queries",
+    "query",
+    "storage",
+    "selected",
+    "restore",
     "update",
     "nest",
-    "bind",
-    "query",
-    "queries",
-    "selected"
+    "bind"
   ],
   "author": "Kosiak MD",
   "license": "MIT",

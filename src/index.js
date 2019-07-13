@@ -1,4 +1,3 @@
-export GQLStorage from './GQLStorage';
 export EnchantedPromise from './helpers/EnchantedPromise';
 export * from './helpers';
 export * from './utils';

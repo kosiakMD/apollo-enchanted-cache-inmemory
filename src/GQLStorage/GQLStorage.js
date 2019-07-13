@@ -20,6 +20,10 @@ class GQLStorage {
     return `${GQLStorage.queryMark}:${queryName}`;
   }
 
+  constructor(appStorage) {
+    this.appStorage = new AppStorage(appStorage);
+  }
+
   /**
    * @static
    * @async
@@ -27,9 +31,9 @@ class GQLStorage {
    * @param {Object | String} storeData
    * @return {Promise}
    * */
-  static async saveQuery(query, storeData) {
+  async saveQuery(query, storeData) {
     const queryName = GQLStorage.getQueryName(query);
-    return AppStorage.set(queryName, JSON.stringify(storeData));
+    return this.appStorage.set(queryName, JSON.stringify(storeData));
   }
 
   /**
@@ -45,9 +49,9 @@ class GQLStorage {
    * @param {getCallback?} callback
    * @return {Promise}
    * */
-  static async getQuery(query, callback) {
+  async getQuery(query, callback) {
     const queryName = GQLStorage.getQueryName(query);
-    const result = await AppStorage.get(queryName, callback);
+    const result = await this.appStorage.get(queryName, callback);
     return JSON.parse(result);
   }
 
@@ -64,9 +68,9 @@ class GQLStorage {
    * @param {multiActionCallback?} callback
    * @return {Promise}
    * */
-  static async multiGet(queries, callback) {
+  async multiGet(queries, callback) {
     const keys = queries.map(GQLStorage.getQueryName);
-    const results = await AppStorage.multiGet(keys, callback);
+    const results = await this.appStorage.multiGet(keys, callback);
     return results.map(keyValueArray => JSON.parse(keyValueArray[1]));
   }
 
@@ -77,9 +81,9 @@ class GQLStorage {
    * @param {multiActionCallback?} callback
    * @return {Promise}
    * */
-  static async multiRemove(queries, callback) {
+  async multiRemove(queries, callback) {
     const keys = queries.map(GQLStorage.getQueryName);
-    await AppStorage.multiRemove(keys, callback);
+    await this.appStorage.multiRemove(keys, callback);
     return true;
   }
 
@@ -96,9 +100,9 @@ class GQLStorage {
    * @param {removeCallback?} callback
    * @return {Promise}
    * */
-  static async removeQuery(query, callback) {
+  async removeQuery(query, callback) {
     const queryName = GQLStorage.getQueryName(query);
-    return AppStorage.remove(queryName, callback);
+    return this.appStorage.remove(queryName, callback);
   }
 }
 

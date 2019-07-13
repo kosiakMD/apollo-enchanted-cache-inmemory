@@ -7,13 +7,27 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## RoadMap
 
 ### Add
- - tests
+ - *finish support for LocalStorage (e.g. add multiSet)!*
+ - *rewrite EnchantedInMemoryCache into `class`!*
+ - add tests
  - ability for 2-ways updating linked/nested queries as optional
  - migration support
  - support Fragments
  - support/restoring storing Queries with IDs
 
 ## Unreleased
+
+## v1.2.0-beta.0
+### Changed
+ **Breaking changes*
+ - *added as 3rd EnchantedInMemoryCache param `AppStorage`* - support of both `AsyncStorage` and `LocalStorage` via Dependency Injection as `GraphQLStorage` (previous `storage`)
+ - EnchantedInMemoryCache 3rd param `logs` became 4th 
+ - `AppStorage` and `GQLStorage` are not more available directly and as set of static only methods - they are created with dependencies provided as params in `enchantInMemoryCache` and set as properties to the new "enchanted" cache:
+ ```javascript
+const cache = createEnchantedInMemoryCache(...);
+const GQLStorage = cache.GQLStorage; // to get `GQLStorage`
+const AppStorage = cache.AppStorage; // to get `AppStorage`
+ ```
 
 ## v1.1.3
 ### Changed
