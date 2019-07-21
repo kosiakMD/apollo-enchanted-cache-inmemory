@@ -194,11 +194,11 @@ const logs = {
 };
 
 const cache = createEnchantedInMemoryCache(
-  inMemoryCache,
-  subscribedQueries,
-  AsyncStorage, // or LocalStorage
-  logs,
-  // alternative to `GraphQLStorage` class, eg for wrapper Realm
+  inMemoryCache, // instance of `InMemoryCache`
+  subscribedQueries, // config type `SubscribedQueries`
+  AsyncStorage, // or `LocalStorage` - main app storage, can be omitted if `GraphQLStorage` provided  
+  logs, // type Logs
+  // GQLStorage, - alternative to `GraphQLStorage` class, e.g. `Realm` (mobile) / `IndexedDB` (web) Wrapper
 );
 const GQLStorage = cache.GQLStorage; // to get `GQLStorage`
 const AppStorage = cache.AppStorage; // to get `AppStorage` - AsyncStorage or LocalStorage

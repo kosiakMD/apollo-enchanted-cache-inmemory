@@ -3,6 +3,9 @@ import { getQueryName } from '../helpers';
 import { nestByArrayPath } from '../utils';
 import EnchantedPromise from '../helpers/EnchantedPromise';
 
+// for web to avoid ReferenceError exception
+const __DEV__ = this.__DEV__;
+
 /**
  * type DocumentNode = {
  *    +kind: 'Document',

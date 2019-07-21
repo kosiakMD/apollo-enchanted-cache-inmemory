@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
-## v1.2.0-beta.0
+## v1.2.0
 ### Changed
  **Breaking changes*
  - *added as 3rd EnchantedInMemoryCache param `AppStorage`* - support of both `AsyncStorage` and `LocalStorage` via Dependency Injection as `GraphQLStorage` (previous `storage`)
@@ -28,6 +28,23 @@ const cache = createEnchantedInMemoryCache(...);
 const GQLStorage = cache.GQLStorage; // to get `GQLStorage`
 const AppStorage = cache.AppStorage; // to get `AppStorage`
  ```
+ - improved Readme Docs
+ 
+## v1.2.0-beta.0
+### Changed
+ **Breaking changes*
+<details>
+  <summary>Details:</summary>
+
+  - *added as 3rd EnchantedInMemoryCache param `AppStorage`* - support of both `AsyncStorage` and `LocalStorage` via Dependency Injection as `GraphQLStorage` (previous `storage`)
+  - EnchantedInMemoryCache 3rd param `logs` became 4th 
+  - `AppStorage` and `GQLStorage` are not more available directly and as set of static only methods - they are created with dependencies provided as params in `enchantInMemoryCache` and set as properties to the new "enchanted" cache:
+  ```javascript
+  const cache = createEnchantedInMemoryCache(...);
+  const GQLStorage = cache.GQLStorage; // to get `GQLStorage`
+  const AppStorage = cache.AppStorage; // to get `AppStorage`
+  ```
+</details>
 
 ## v1.1.3
 ### Changed
