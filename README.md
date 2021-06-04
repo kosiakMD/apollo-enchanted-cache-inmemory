@@ -181,6 +181,7 @@ const inMemoryCache = new InMemoryCache({
 // for debug/log reasons
 /** @type Logs */
 const logs = {
+  logger: console, // or any other logger with appropriate to the type methods
   logCacheWrite: true,
   beforeHandlers: (cacheData, queryName) => {
     console.log('beforeHandlers', queryName, cacheData.data);
@@ -193,13 +194,13 @@ const logs = {
   },
 };
 
-const cache = createEnchantedInMemoryCache(
+const cache = createEnchantedInMemoryCache({
   inMemoryCache, // instance of `InMemoryCache`
   subscribedQueries, // config type `SubscribedQueries`
   AsyncStorage, // or `LocalStorage` - main app storage, can be omitted if `GraphQLStorage` provided  
   logs, // type Logs
   // GQLStorage, - alternative to `GraphQLStorage` class, e.g. `Realm` (mobile) / `IndexedDB` (web) Wrapper
-);
+});
 const GQLStorage = cache.GQLStorage; // to get `GQLStorage`
 const AppStorage = cache.AppStorage; // to get `AppStorage` - AsyncStorage or LocalStorage
 // ...
@@ -297,13 +298,23 @@ type SubscribedQueries = Array<SubscribedQuery>;
 
 type DepTrackingCache = { data: Object; depend: Object };
 
-type Logger = (cacheData: DepTrackingCache, queryName: String) => void;
+type LogCallback = (cacheData: DepTrackingCache, queryName: String) => void;
+
+type LogMethod = (...args: any[]) => void;
+
+interface Logger {
+  log: LogMethod,
+  warn: LogMethod,
+  error: LogMethod,
+  [key: string]: LogMethod,
+}
 
 type Logs = {
+    logger: Logger,
     logCacheWrite: Boolean,
-    beforeHandlers: Logger,
-    beforeWrite: Logger,
-    afterWrite: Logger,
+    beforeHandlers: LogCallback,
+    beforeWrite: LogCallback,
+    afterWrite: LogCallback,
 };
 
 enum UpdateTypesEnum {
@@ -315,7 +326,8 @@ enum UpdateTypesEnum {
 
 ## License
 
-Copyright (c) 2019 KosiakMD (Anton Kosiak)
+Copyright (c) 2019 KosiakMD (Anton Kosiak) 
+[email](mailto:keleborn.mail@gmail.com)
 
 Licensed under the The MIT License (MIT) (the "License");
 you may not use this file except in compliance with the License.

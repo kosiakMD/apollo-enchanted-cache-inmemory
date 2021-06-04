@@ -41,7 +41,22 @@ const __DEV__ = this.__DEV__;
  * @return {object}
  * */
 /**
- * @callback Logger
+ * @callback LogMethod
+ * @param {...*} var_args
+ * @return void
+ * */
+/**
+ * @typedef {{
+ *   log: LogMethod,
+ *   warn: LogMethod,
+ *   error: LogMethod,
+ *   info?: LogMethod,
+ *   debug?: LogMethod,
+ *   [...]: function
+ * }} Logger
+ * */
+/**
+ * @callback LogCallback
  * @param {DepTrackingCache} cacheData
  * @param {String} queryName
  * @return void
@@ -97,10 +112,11 @@ const __DEV__ = this.__DEV__;
  * */
 /**
  * @typedef {{
+ *   logger: Logger,
  *   logCacheWrite: Boolean,
- *   beforeHandlers: Logger,
- *   beforeWrite: Logger,
- *   afterWrite: Logger,
+ *   beforeHandlers: LogCallback,
+ *   beforeWrite: LogCallback,
+ *   afterWrite: LogCallback,
  * }} Logs
  * */
 /**
@@ -119,28 +135,15 @@ const __DEV__ = this.__DEV__;
  * @return {EnchantedInMemoryCache}
  * */
 // TODO better to extend but seems it's redundant for 1 override & 2 new methods
-const createEnchantedInMemoryCache = (
+const createEnchantedInMemoryCache = ({
   aCache,
   enchantedInMemoryCacheConfig,
   AppStorage,
   logs = {},
   GraphQLStorage,
-) => {
+}) => {
   /** static begin */
   const versionQueryName = '&_cacheVersion_$';
-
-  const logError = (title, er, name = '') => {
-    if (__DEV__) {
-      console.log(`\nError: ${title}`);
-      if (Array.isArray(er)) {
-        console.log('\nqueries', name);
-        er.map(console.warn);
-      } else {
-        name && console.log(`\ntracked by name ${name}`);
-        console.warn(er);
-      }
-    }
-  };
   /** static end */
 
   /** constructor begin */
@@ -155,20 +158,42 @@ const createEnchantedInMemoryCache = (
 
   const { subscribedQueries, version } = enchantedInMemoryCacheConfig;
 
-  const { logCacheWrite, beforeHandlers, beforeWrite, afterWrite } = logs;
+  const {
+    logger,
+    logCacheWrite,
+    beforeHandlers,
+    beforeWrite,
+    afterWrite,
+  } = logs;
   /** constructor end */
+
+  const logError = (title, er, name = '') => {
+    if (__DEV__) {
+      if (!logger)
+        throw new Error('There is no provided `logger` at `logs` param');
+      logger.warn(`\nError: ${title}`);
+      if (Array.isArray(er)) {
+        logger.log('\nqueries', name);
+        er.map(logger.error);
+      } else {
+        name && logger.log(`\ntracked by name ${name}`);
+        logger.error(er);
+      }
+    }
+  };
 
   const asyncVersionSyncing = async (resolve, reject) => {
     try {
       const storedVersion = await GQLStorage.getQuery(versionQueryName);
-      if (__DEV__)
-        console.log(
+      if (__DEV__) {
+        logger.log(
           'EnchantedInMemoryCache',
           '\n\tstored version:',
           storedVersion,
           '\n\tcurrent version:',
           version,
         );
+      }
       if (storedVersion !== version) {
         // TODO: provide logic of migration
         const queryNames = [];
@@ -281,7 +306,7 @@ const createEnchantedInMemoryCache = (
     const { query, result } = writeData;
     const queryName = getQueryName(query);
     if (logCacheWrite && __DEV__) {
-      console.info('On Cache Write', queryName, result, ignore ? 'ignore' : '');
+      logger.log('On Cache Write', queryName, result, ignore ? 'ignore' : '');
       if (beforeHandlers) {
         beforeHandlers(aCache.data, queryName);
       }
